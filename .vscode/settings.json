@@ -14,11 +14,13 @@
 
   // 🛠 Formatação e Lint
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "javascript.suggest.autoImports": true,
+  "typescript.suggest.autoImports": true,
   "editor.formatOnSave": true,
 
   "editor.codeActionsOnSave": {
-    // "typescript.preferences.autoImportSuggestions.enabled": true,
-    // "javascript.preferences.autoImportSuggestions.enabled": true,
+    "javascript.suggest.autoImports": "explicit",
+    "typescript.suggest.autoImports": "explicit",
     "source.fixAll.eslint": "explicit"
   },
 
@@ -43,6 +45,8 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
   },
-  "liveServer.settings.multiRootWorkspaceName": "chronos-pomodoro"
+  "liveServer.settings.multiRootWorkspaceName": "chronos-pomodoro",
+  "javascript.suggest.autoImports": true,
+  "typescript.suggest.autoImports": true
 
 }
