@@ -2,18 +2,26 @@ import { DefaultInput } from "../DefaultInput";
 import { Cycles } from "../Cycles";
 import { DefaultButton } from "../DefaultButton";
 import { PlayCircleIcon } from 'lucide-react';
+import { useRef } from "react";
 
 
 export function MainForm() {
-	return (
+	const taskNameInput = useRef<HTMLInputElement>(null);
 
-<form className='form' action="" >
+	function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+	}
+
+	return (
+<form onSubmit={handleCreateNewTask} className='for' action='' >
 <div className='formRow'>
 	<DefaultInput
 		labelText='Test'
 		id='input'
 		type='text'
-		placeholder='Write here...'/>
+		placeholder='Write here...'
+		ref={ taskNameInput }
+		/>
 </div>
 
 <div className='formRow'>
