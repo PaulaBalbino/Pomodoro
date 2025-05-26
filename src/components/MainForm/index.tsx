@@ -1,7 +1,7 @@
 import { DefaultInput } from "../DefaultInput";
 import { Cycles } from "../Cycles";
 import { DefaultButton } from "../DefaultButton";
-import { PlayCircleIcon } from 'lucide-react';
+import { PlayCircleIcon, StopCircleIcon } from 'lucide-react';
 import { useRef } from "react";
 import { useTaskContext } from "../../contexts/TaskContext/useTaskContext";
 import { TaskModel } from "../../models/TaskModel";
@@ -57,6 +57,22 @@ export function MainForm() {
 		});
 	}
 
+	function handleInterruptTask() {
+		setState(prevState => {
+			return {
+				...prevState,
+				activeTask: null,
+				secondsRemaining: 0,
+				formattedSecondsRemaining: '00:00',
+				tasks: prevState.tasks.map(task => {
+					if (prevState.activeTask && prevState.activeTask.id === task.id)
+						return {...task, interruptDate:Date.now() };
+					return task;
+				})
+			};
+		});
+	}
+
 	return (
 <form onSubmit={handleCreateNewTask} className='for' action='' >
 <div className='formRow'>
@@ -66,7 +82,7 @@ export function MainForm() {
 		type='text'
 		placeholder='Write here...'
 		ref={ taskNameInput }
-		disabled={!!state.activeTask}
+		disabled={!!state.activeTask} // desativa a possibilidade de escrever a task (retorno do boolean eh true)
 		/>
 </div>
 
@@ -81,8 +97,26 @@ export function MainForm() {
 )}
 
 <div className='formRow'>
-	<DefaultButton icon={<PlayCircleIcon/>} />
+	{!state.activeTask ? (
+	<DefaultButton
+		aria-Label='Start new task'
+		title='Start new task'
+		type='submit'
+		icon={<PlayCircleIcon/>}
+		key='submit button' //precisa criar o key para evitar bug no botao
+	/>
+	) : (
+		<DefaultButton
+		aria-Label='Stop current task'
+		title='Stop current task'
+		type='button'
+		color='red'
+		icon={<StopCircleIcon/>}
+		onClick={handleInterruptTask}
+		key='lock button'
+		/>
+	)}
 </div>
 </form>
-)
+);
 }
