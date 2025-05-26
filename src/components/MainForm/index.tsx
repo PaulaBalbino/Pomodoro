@@ -66,6 +66,7 @@ export function MainForm() {
 		type='text'
 		placeholder='Write here...'
 		ref={ taskNameInput }
+		disabled={!!state.activeTask}
 		/>
 </div>
 
@@ -73,9 +74,11 @@ export function MainForm() {
 	<p>Lorem ipsum dolor sit amet.</p>
 </div>
 
+{state.currentCycle > 0 && (
 <div className='formRow'>
 	<Cycles />
 </div>
+)}
 
 <div className='formRow'>
 	<DefaultButton icon={<PlayCircleIcon/>} />
