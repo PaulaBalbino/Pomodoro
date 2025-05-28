@@ -26,7 +26,7 @@ return (
 				<span
 				key={nextCycle}
 				className={`${styles.cycleDot} ${styles[nextCycleType]}`}
-				aria-Label= {`Indicator of ${cycleDescriptionMap[nextCycleType]} cycle`}
+				aria-abel= {`Indicator of ${cycleDescriptionMap[nextCycleType]} cycle`}
 				title={`Indicator of ${cycleDescriptionMap[nextCycleType]} cycle`}
 				></span>
 			);

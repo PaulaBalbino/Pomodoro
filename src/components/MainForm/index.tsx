@@ -8,6 +8,7 @@ import { TaskModel } from "../../models/TaskModel";
 import { getNextCycle } from "../../utils/getNextCycle";
 import { getNextCycleType } from "../../utils/getNextCycleType";
 import { TaskActionTypes } from '../../contexts/TaskContext/taskActions';
+import { Tips } from "../Tips";
 
 
 export function MainForm() {
@@ -17,6 +18,8 @@ export function MainForm() {
 	// Cycles
 	const nextCycle = getNextCycle(state.currentCycle);
 	const nextCycleType = getNextCycleType(nextCycle);
+
+
 
 	function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -43,6 +46,7 @@ export function MainForm() {
 		};
 
 		dispatch({ type: TaskActionTypes.START_TASK, payload: newTask });
+
 	}
 
 	function handleInterruptTask() {
@@ -63,7 +67,7 @@ export function MainForm() {
 </div>
 
 <div className='formRow'>
-	<p>Lorem ipsum dolor sit amet.</p>
+	<Tips/>
 </div>
 
 {state.currentCycle > 0 && (
@@ -75,7 +79,7 @@ export function MainForm() {
 <div className='formRow'>
 	{!state.activeTask ? (
 	<DefaultButton
-		aria-Label='Start new task'
+		aria-label='Start new task'
 		title='Start new task'
 		type='submit'
 		icon={<PlayCircleIcon/>}
@@ -83,7 +87,7 @@ export function MainForm() {
 	/>
 	) : (
 		<DefaultButton
-		aria-Label='Stop current task'
+		aria-label='Stop current task'
 		title='Stop current task'
 		type='button'
 		color='red'
