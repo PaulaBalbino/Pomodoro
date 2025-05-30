@@ -1,8 +1,8 @@
 import { TaskStateModel } from "../models/TaskStateModel";
 
-let instance: TimerWorkManager | null = null
+let instance: TimerWorkerManager | null = null
 
-export class TimerWorkManager {
+export class TimerWorkerManager {
 	private worker: Worker;
 
 	private constructor() {
@@ -11,7 +11,7 @@ export class TimerWorkManager {
 
 	static getInstance() {
 		if(!instance) {
-			instance = new TimerWorkManager();
+			instance = new TimerWorkerManager();
 		}
 		return instance;
 	}

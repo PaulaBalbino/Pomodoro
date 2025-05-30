@@ -2,12 +2,12 @@ let isRunning = false;
 
 self.onmessage = function (event) {
 	if (isRunning)
-		return
+		return;
 
 	isRunning = true;
 
 	const state = event.data;
-	const {active, secondsRemaining } = state;
+	const { activeTask, secondsRemaining } = state;
 
 	const endDate = activeTask.startDate + secondsRemaining * 1000; // * 1000 pois esta em miliseconds
 		const now = Date.now();
@@ -15,8 +15,9 @@ self.onmessage = function (event) {
 
 	function tick() {
 		self.postMessage(countDownSeconds);
+
 		const now = Date.now();
-		const countDownSeconds = Math.floor((endDate - now) / 1000);
+		countDownSeconds = Math.floor((endDate - now) / 1000);
 
 		setTimeout(tick, 1000); // executa a funcao por 1 segundo (ajuste)
 	}
