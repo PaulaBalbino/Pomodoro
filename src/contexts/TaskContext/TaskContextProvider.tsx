@@ -1,10 +1,10 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import { initialTaskState } from './initialTaskState';
 import { TaskContext } from './TaskContext';
 import { taskReducer } from './taskReducer';
 import { TimerWorkerManager } from '../../workers/TimerWorkerManager';
 import { TaskActionTypes } from './taskActions';
-// import { loadBeep } from '../../utils/loadBeep';
+import { loadBeep } from '../../utils/loadBeep';
 
 type TaskContextProviderProps = {
 	children: React.ReactNode;
@@ -13,14 +13,19 @@ type TaskContextProviderProps = {
 
 export function TaskContextProvider({ children }: TaskContextProviderProps) {
 	const [state, dispatch] = useReducer(taskReducer, initialTaskState);
-	// const playBeepRef = useRef<ReturnType<typeof loadBeep> | null > (null);
+	const playBeepRef = useRef<()=> void | null > (null);
 
 	const worker = TimerWorkerManager.getInstance();
 
 	worker.onmessage(e => {
+		console.log(e.data);
 		const countDownSeconds = e.data;
 
 		if (countDownSeconds <= 0) {
+			if (playBeepRef.current) {
+				playBeepRef.current();
+				playBeepRef.current = null;
+			}
 			dispatch({
 				type: TaskActionTypes.COMPLETE_TASK,
 			});
@@ -37,8 +42,16 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
 		if (!state.activeTask) {
 			worker.terminate();
 		}
-    worker.postMessage(state);
-  }, [worker, state]); // se a variavel worker mudasse poderia causar um loop infinito
+	worker.postMessage(state);
+	}, [worker, state]); // se a variavel worker mudasse poderia causar um loop infinito
+
+	useEffect(() => {
+		if (state.activeTask && playBeepRef.current === null) {
+			playBeepRef.current = loadBeep();
+		} else {
+			playBeepRef.current = null;
+		}
+	}, [state.activeTask])
 
 
 	return (

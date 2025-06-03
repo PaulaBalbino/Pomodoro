@@ -23,7 +23,7 @@ export type TaskActionsWithPayload =
 	| {
 		type: TaskActionTypes.COUNT_DOWN;
 		payload: { secondsRemaining: number };
-	}
+	};
 
 export type TaskActionsWithoutPayload =
 	| {
@@ -34,8 +34,7 @@ export type TaskActionsWithoutPayload =
 	}
 	| {
 		type: TaskActionTypes.COMPLETE_TASK;
-	}
-	;
+	};
 
 export type TaskActionModel =
 	| TaskActionsWithPayload
