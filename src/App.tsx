@@ -6,7 +6,6 @@ import { MessagesContainer } from './components/MessagesContainer';
 import { MainRouter } from './routers/MainRouter';
 
 
-
 export function App() {
 	return (
 		<TaskContextProvider>

@@ -2,6 +2,7 @@ import { Container } from "../../components/Container";
 import { MainTemplate } from "../../templates/MainTemplate";
 import { GenericHtml } from '../../components/GenericHtml';
 import { Heading } from '../../components/Heading';
+import { RouterLink } from "../../components/RouterLink";
 
 export function NotFound() {
 	return (
@@ -22,8 +23,8 @@ export function NotFound() {
 					<p>
 					Don’t worry — your mission isn’t over. </p>
 					<p>
-					<a href='/'> Click here to return to Earth (aka the homepage) </a>
-					 or {' '} <a href='/history'> here to check the History </a> ✨
+					<RouterLink href='/'> Click here to return to Earth (aka the homepage) </RouterLink>
+					 or {' '} <RouterLink href='/history/'> here to check the History </RouterLink> ✨
 					</p>
 
 					<p>
