@@ -42,6 +42,8 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
 		if (!state.activeTask) {
 			worker.terminate();
 		}
+
+		document.title = `${state.formattedSecondsRemaining} - Pomodoro`
 	worker.postMessage(state);
 	}, [worker, state]); // se a variavel worker mudasse poderia causar um loop infinito
 

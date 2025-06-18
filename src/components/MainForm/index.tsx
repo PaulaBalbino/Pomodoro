@@ -15,6 +15,7 @@ import { showMessage } from "../../adapters/showMessage";
 export function MainForm() {
 	const { state, dispatch } = useTaskContext();
   	const taskNameInput = useRef<HTMLInputElement>(null);
+	const lastTaskName = state.tasks[state.tasks.length - 1]?.name || '';
 
 	// Cycles
 	const nextCycle = getNextCycle(state.currentCycle);
@@ -67,6 +68,7 @@ export function MainForm() {
 		placeholder='Write here...'
 		ref={ taskNameInput }
 		disabled={!!state.activeTask} // desativa a possibilidade de escrever a task (retorno do boolean eh true)
+		defaultValue={lastTaskName}
 		/>
 </div>
 
