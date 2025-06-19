@@ -5,6 +5,7 @@ import { taskReducer } from './taskReducer';
 import { TimerWorkerManager } from '../../workers/TimerWorkerManager';
 import { TaskActionTypes } from './taskActions';
 import { loadBeep } from '../../utils/loadBeep';
+import { TaskStateModel } from '../../models/TaskStateModel';
 
 type TaskContextProviderProps = {
 	children: React.ReactNode;
@@ -12,7 +13,21 @@ type TaskContextProviderProps = {
 
 
 export function TaskContextProvider({ children }: TaskContextProviderProps) {
-	const [state, dispatch] = useReducer(taskReducer, initialTaskState);
+	const [state, dispatch] = useReducer(taskReducer, initialTaskState, () => {
+		const storageState = localStorage.getItem('state'); // retorna null se nao tiver state
+
+		if (storageState === null)
+			return initialTaskState;
+
+		const parsedStoredState = JSON.parse(storageState) as TaskStateModel;
+
+		return {
+			...parsedStoredState,
+			activeTask: null,
+			secondsRemaining: 0,
+			formattedSecondsRemaining: '00:00',
+		}; // eh necessario fazer o return desta forma para zerar o contador ao fazer refresh, caso contrario o countdown nao reinicia
+	});
 	const playBeepRef = useRef<()=> void | null > (null);
 
 	const worker = TimerWorkerManager.getInstance();
@@ -38,7 +53,9 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
 		}
 	});
 
+
 	useEffect(() => {
+		localStorage.setItem('state', JSON.stringify(state));
 		if (!state.activeTask) {
 			worker.terminate();
 		}
