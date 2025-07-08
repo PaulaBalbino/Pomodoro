@@ -1,51 +1,32 @@
-import { MainTemplate } from "../../templates/MainTemplate";
-import { Container } from "../../components/Container";
-import { Heading } from "../../components/Heading";
-import { DefaultButton } from "../../components/DefaultButton";
-import { TrashIcon } from "lucide-react";
-import styles from './styles.module.css';
-import { useTaskContext } from "../../contexts/TaskContext/useTaskContext";
-import { formatDate } from "../../utils/formatDate";
-import { getTaskStatus } from "../../utils/getTaskStatus";
-import { sortTasks, SortTasksOptions } from '../../utils/sortTasks';
-import { useEffect, useState } from "react";
-import { TaskActionTypes } from "../../contexts/TaskContext/taskActions";
 
+import { TrashIcon } from 'lucide-react';
+import { Container } from '../../components/Container';
+import { DefaultButton } from '../../components/DefaultButton';
+import { Heading } from '../../components/Heading';
+import { MainTemplate } from '../../templates/MainTemplate';
+import styles from './styles.module.css';
+import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
+import { formatDate } from '../../utils/formatDate';
+import { getTaskStatus } from '../../utils/getTaskStatus';
+import { sortTasks, SortTasksOptions } from '../../utils/sortTasks';
+import { useEffect, useState } from 'react';
+import { showMessage } from '../../adapters/showMessage';
+import { TaskActionTypes } from '../../contexts/TaskContext/taskActions';
 
 export function History() {
-	const { state, dispatch } = useTaskContext()
+	const { state, dispatch } = useTaskContext();
+	const [confirmClearHistory, setConfirmClearHistory] = useState(false);
 	const hasTasks = state.tasks.length > 0;
-	const [sortTaskOptions, setSortTaskOptions] = useState<SortTasksOptions>(
+
+	const [sortTasksOptions, setSortTaskOptions] = useState<SortTasksOptions>(
 		() => {
 			return {
 				tasks: sortTasks({ tasks: state.tasks }),
 				field: 'startDate',
 				direction: 'desc',
-			}
+			};
 		},
 	);
-
-	function handleSortTasks({ field }: Pick<SortTasksOptions, 'field'>) {
-		const newDirection = sortTaskOptions.direction === 'desc' ? 'asc' : 'desc'
-
-		setSortTaskOptions({
-			tasks: sortTasks({
-				direction: newDirection,
-				tasks: sortTaskOptions.tasks,
-				field,
-			}),
-			direction: newDirection,
-			field,
-		})
-	}
-
-	function handleResetHistory() {
-		if (!confirm('Tem ctz'))
-			return;
-		dispatch({ type: TaskActionTypes.RESET_STATE });
-
-	}
-
 
 	useEffect(() => {
 		setSortTaskOptions(prevState => ({
@@ -57,6 +38,42 @@ export function History() {
 			}),
 		}));
 	}, [state.tasks]);
+
+	useEffect(() => {
+		if (!confirmClearHistory) return;
+
+		setConfirmClearHistory(false);
+
+		dispatch({ type: TaskActionTypes.RESET_STATE });
+	}, [confirmClearHistory, dispatch]);
+
+	function handleSortTasks({ field }: Pick<SortTasksOptions, 'field'>) {
+		const newDirection = sortTasksOptions.direction === 'desc' ? 'asc' : 'desc';
+
+		setSortTaskOptions({
+			tasks: sortTasks({
+				direction: newDirection,
+				tasks: sortTasksOptions.tasks,
+				field,
+			}),
+			direction: newDirection,
+			field,
+		});
+	}
+
+	useEffect(() => {
+		return () => {
+			showMessage.dismiss();
+		};
+	}, []);
+
+	function handleResetHistory() {
+		showMessage.dismiss();
+		showMessage.confirm('Tem certeza?', confirmation => {
+			setConfirmClearHistory(confirmation);
+		});
+	}
+
 
 	return (
 		<MainTemplate>
@@ -90,7 +107,7 @@ export function History() {
 							</thead>
 
 							<tbody>
-								{sortTaskOptions.tasks.map(task => {
+								{sortTasksOptions.tasks.map(task => {
 									const taskTypeDictionaty = {
 										workTime: 'Focus',
 										shortBreakTime: 'Short Break Time',
