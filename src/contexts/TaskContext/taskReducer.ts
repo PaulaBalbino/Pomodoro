@@ -67,8 +67,18 @@ export function taskReducer(
 				),
 			};
 		}
+				case TaskActionTypes.CHANGE_SETTINGS: {
+			return {...state, config: { ...action.payload } };
+		}
 	}
 
 	// Sempre deve retornar o estado
 	return state;
 }
+
+// Esse reducer é responsável por gerenciar o estado das tarefas no aplicativo Pomodoro.
+// Deve possuir somente acoes puras, ou seja, não deve conter lógica de negócio complexa.
+// Nao deve possuir funcoes async, pois o Redux não suporta isso diretamente.
+// As ações devem ser simples e diretas, alterando o estado de forma previsível.
+// O estado inicial é definido no arquivo initialTaskState.ts e deve ser importado aqui.
+// Deve estar relacionado ao estado de tarefas, como iniciar, completar, interromper e contar o tempo restante.
